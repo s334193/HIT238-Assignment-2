@@ -54,7 +54,7 @@ color:#000000;
   <img class="mySlides w3-animate-fading" src="3.jpg" style="width:400PX; height:220px">
 </div>
 <h1 align="center">About us</h1>
-<p align="center">we are a world class restaurant base in USA New york city and we offer various services to our clients including accomodation,breakfast,lunch and dinner meals at an affordable prices. </p>
+<p align="center">we are a world class restaurant base in AUSTRALIA and we offer various services to our clients including accomodation,breakfast,lunch and dinner meals at an affordable prices. </p>
 <h2 align="center">Opening hours</h2>
 <p align="center">Our opening hours:</p>
 <p align="center">Monday-Friday: 6Am-11Pm </p>

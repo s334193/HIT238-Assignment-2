@@ -1,0 +1,270 @@
+<?php
+//include auth.php file on all secure pages
+include("auth.php");
+?>
+<?php
+//including the database connection file
+include_once("db.php");
+ 
+if(isset($_POST['Submit'])) { 
+//ProductID,ProductName,Description,Costs  
+    $ProductName = $_POST['ProductName'];
+    $Description = $_POST['Description'];
+    $Costs = $_POST['Costs'];
+    if(empty($ProductName) || empty($Description) || empty($Costs)) {                
+        if(empty($ProductName)) {
+            echo "<font color='red'>ProductName field is empty.</font><br/>";
+        }
+        
+        if(empty($Description)) {
+            echo "<font color='red'>Description field is empty.</font><br/>";
+        }
+        
+        if(empty($Costs)) {
+            echo "<font color='red'>Costs field is empty.</font><br/>";
+        }
+        //link to the previous page
+        echo "<br/><a href='javascript:self.history.back();'>Go Back</a>";
+    } else {//ProductID,ProductName,Description,Costs
+	$query = "SELECT * FROM `PRODUCTS` WHERE ProductName='$ProductName'";
+	$result = mysqli_query($con,$query) or die(mysql_error());
+	$rows = mysqli_num_rows($result); 
+        // if all the fields are filled (not empty)             
+        //insert data to database
+        //**$result = mysqli_query($mysqli, "INSERT INTO users(ProductName,Description,Costs,Status,User_Type,Usernames,Passwords) VALUES('$ProductName','$Description','$Costs','$Status','$User_Type','$Usernames','$Passwords')");
+        
+        //display success message
+        //**echo "<font color='green'>system user added successfully.";
+        //echo "<br/><a href='index.php'>View Result</a>";
+		
+		if($rows>0)
+ {
+  //echo "Registration Details Are Already Submitted with same unique id";
+ echo '<script language="javascript">';
+echo 'alert(" Product Registration Details Are Already Submitted with same product name please check and register it again!!!.")';
+echo '</script>';
+ }
+ else
+ {
+ echo '<script type="text/javascript">alert("Product Registration Details submitted succesfully!!!!");</script>';
+  //**mysql_query("insert into patients(Names,PatientID,Costs,Description,Diagnosis) values('$Names','$PatientID','$Costs','$Description','$Diagnosis')");
+  
+  //header("refresh:2;url=Location :login.php"); // really should be a fully qualified URI
+  $result = mysqli_query($con, "INSERT INTO products(ProductName,Description,Costs) VALUES('$ProductName','$Description','$Costs')");
+header("Location: Productsdetails.php");
+ 
+ }	
+    }
+}
+?>
+<?php
+//including the database connection file
+include_once("db.php");
+ 
+//fetching data in descending order (lastest entry first)
+//$result = mysql_query("SELECT * FROM users ORDER BY id DESC"); // mysql_query is deprecated
+$result = mysqli_query($con, "SELECT * FROM PRODUCTS ORDER BY ProductID DESC"); // using mysqli_query instead
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<link href="style.css" rel="stylesheet">
+<style>
+body
+{
+background-color:#FFFFCC;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111111;
+}
+</style>
+<style>
+/* Style all input fields */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+/* Style the submit button */
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  width:205px;
+}
+
+/* Style the container for inputs */
+.container {
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#message p {
+  padding: 10px 35px;
+  font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
+}
+</style>
+<meta charset="utf-8">
+<title>Registration</title>
+</head>
+<body style="background-image:url(5.JPG);background-size:cover; background-repeat:no-repeat;background-position: center center;">
+<p align="left">Welcome <?php echo $_SESSION['Usernames']; ?>!||USER ID:<?php echo $_SESSION['UserID']; ?></p>
+<ul>
+  <li><a href="Homestaffs.html">HOME</a></li>
+  <li><a href="logout.php">Logout</a></li>
+</ul>
+<div>
+
+<h1 align="center">RESTAURANT MANAGEMENT SYSTEM</h1>
+<h2 align="center">Register new Product</h2>
+<div id="form" style="padding-left:100px">
+<form action="Productsdetails.php" method="post" name="form1">
+        <table width="98%" border="0" style="padding-left:-100px;">
+		
+            <tr> 
+                <td width="22%"><input type="text" name="ProductName" placeholder="Enter the ProductName" required/> </td>
+              <td width="22%"><input type="text" name="Description" placeholder="Enter the Description" required/></td>
+			   <td width="22%"><input type="text" name="Costs" placeholder="Enter the Costs" required></td>
+			   <td><input type="submit" name="Submit" value="SAVE PRODUCTS"></td>
+            </tr>
+    </table>
+  </form>	
+
+		<h2 align="center">REGISTERED PRODUCTS</h2>
+<table width='89%' border=2>
+        <tr bgcolor='#CCCCCC'>
+            <td width="9%">ProductName</td>
+            <td width="9%">Description</td>
+            <td width="6%">Costs</td>
+			<td width="25%">Update</td>
+        </tr>
+        <?php 
+        //while($res = mysql_fetch_array($result)) { // mysql_fetch_array is deprecated, we need to use mysqli_fetch_array 
+        while($res = mysqli_fetch_array($result)) {         
+            echo "<tr>";
+            echo "<td>".$res['ProductName']."</td>";
+            echo "<td>".$res['Description']."</td>";
+            echo "<td>".$res['Costs']."</td>";    
+            echo "<td><a href=\"updateproducts.php?ProductID=$res[ProductID]\">Edit Product</a> | <a href=\"deleteproducts.php?ProductID=$res[ProductID]\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a></td>";        
+        }
+        ?>
+  </table>
+  </div>
+<script>
+var myInput = document.getElementById("Passwords");
+var letter = document.getElementById("letter");
+var capital = document.getElementById("capital");
+var number = document.getElementById("number");
+var length = document.getElementById("length");
+
+// When the user clicks on the password field, show the message box
+myInput.onfocus = function() {
+  document.getElementById("message").style.display = "block";
+}
+
+// When the user clicks outside of the password field, hide the message box
+myInput.onblur = function() {
+  document.getElementById("message").style.display = "none";
+}
+
+// When the user starts to type something inside the password field
+myInput.onkeyup = function() {
+  // Validate lowercase letters
+  var lowerCaseLetters = /[a-z]/g;
+  if(myInput.value.match(lowerCaseLetters)) {  
+    letter.classList.remove("invalid");
+    letter.classList.add("valid");
+  } else {
+    letter.classList.remove("valid");
+    letter.classList.add("invalid");
+  }
+  
+  // Validate capital letters
+  var upperCaseLetters = /[A-Z]/g;
+  if(myInput.value.match(upperCaseLetters)) {  
+    capital.classList.remove("invalid");
+    capital.classList.add("valid");
+  } else {
+    capital.classList.remove("valid");
+    capital.classList.add("invalid");
+  }
+
+  // Validate numbers
+  var numbers = /[0-9]/g;
+  if(myInput.value.match(numbers)) {  
+    number.classList.remove("invalid");
+    number.classList.add("valid");
+  } else {
+    number.classList.remove("valid");
+    number.classList.add("invalid");
+  }
+  
+  // Validate length
+  if(myInput.value.length >= 8) {
+    length.classList.remove("invalid");
+    length.classList.add("valid");
+  } else {
+    length.classList.remove("valid");
+    length.classList.add("invalid");
+  }
+}
+</script>
+</div>
+</body>
+</html>

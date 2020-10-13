@@ -1,0 +1,122 @@
+<?php
+//include auth.php file on all secure pages
+include("auth.php");
+?>
+<?php
+// including the database connection file
+include_once("db.php");
+ //$paymentID  = $_GET['paymentID '];
+ //paymentID ,Status,Description,Costs
+if(isset($_POST['update']))
+{   
+$Status = $_POST['Status'];
+	$paymentID = $_POST['paymentID'];
+    if(empty($Status)) {                
+        if(empty($Status)) {
+            echo "<font color='red'>Status field is empty.</font><br/>";
+        }
+        
+        
+        
+        //link to the previous page
+        echo "<br/><a href='javascript:self.history.back();'>Go Back</a>";
+    } 
+	else {    
+        //updating the table
+        $result = mysqli_query($con,"UPDATE PAYMENTS SET Status='$Status' WHERE paymentID =$paymentID");
+        
+        //redirectig to the display page. In our case, it is index.php
+        header("Location:Orders.php");
+    }
+}
+?>
+<?php
+//getting id from url
+$paymentID  = $_GET['paymentID'];
+ 
+//selecting data associated with this particular id
+$result = mysqli_query($con, "SELECT * FROM PAYMENTS WHERE paymentID =$paymentID ");
+ 
+while($res = mysqli_fetch_array($result))
+{
+/*Status,Description,Costs,Status, User_Type,Usernames,Passwords*/
+    $Status = $res['Status'];
+    //$Description = $res['Description'];
+    //$Costs = $res['Costs'];
+	 
+}
+?>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<link href="style.css" rel="stylesheet">
+<style>
+body
+{
+background-color:#FFFFCC;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111111;
+}
+</style>
+<meta charset="utf-8">
+<title>Registration</title>
+</head>
+<body style="background-image:url(5.JPG);background-size:cover; background-repeat:no-repeat;background-position: center center;">
+<p align="left">Welcome <?php echo $_SESSION['Usernames']; ?>!||USER ID:<?php echo $_SESSION['UserID']; ?></p>
+<ul>
+  <li><a href="orders.html">HOME</a></li>
+  <li><a href="logout.php">Logout</a></li>
+</ul>
+<div>
+
+
+
+
+<h1 align="center">RESTAURANT MANAGEMENT SYSTEM</h1>
+<h2 align="center">Confirm Payment Made</h2>
+<div id="form" style="padding-left:350px">
+<form action="confirmpayment.php" method="post" name="form1">
+        <table width="104%" border="0" align="left">
+		
+            <tr> 
+                <td width="22%">Select Option:</td>
+              <td width="31%">
+			  <select name="Status">
+			  <option value="<?php echo $Status;?>"><?php echo $Status;?></option>
+			  <option value="Confirmed payment">Confirm Payment</option>
+			  </select>
+			 </td>
+			  <td width="40%"><input type="submit" name="update" width="60%" value="CONFIRM PAYMENT"></td> 
+			  <td width="7%"><input type="hidden" name="paymentID" value=<?php echo $_GET['paymentID'];?>></td>               
+            </tr>
+    </table>
+  </form>
+  </div>
+
+</div>
+</body>
+</html>

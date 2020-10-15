@@ -1,0 +1,145 @@
+<?php
+//include auth.php file on all secure pages
+include("auth.php");
+?>
+<?php
+//including the database connection file
+include_once("db.php");
+ 
+//fetching data in descending order (lastest entry first)
+//$result = mysql_query("SELECT * FROM users ORDER BY id DESC"); // mysql_query is deprecated
+$resultorder = mysqli_query($con, "SELECT * FROM Feedback ORDER BY FeedbackID DESC"); // using mysqli_query instead
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<link href="style.css" rel="stylesheet">
+<style>
+body
+{
+background-color:#FFFFCC;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111111;
+}
+</style>
+<style>
+/* Style all input fields */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+/* Style the submit button */
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  width:205px;
+}
+
+/* Style the container for inputs */
+.container {
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#message p {
+  padding: 10px 35px;
+  font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
+}
+</style>
+<meta charset="utf-8">
+<title>Registration</title>
+</head>
+<body style="background-image:url(5.JPG);background-size:cover; background-repeat:no-repeat;background-position: center center;">
+<p align="left">Welcome <?php echo $_SESSION['Usernames']; ?>!||USER ID:<?php echo $_SESSION['UserID']; ?></p>
+<ul>
+  <li><a href="Homestaffs.html">HOME</a></li>
+  <li><a href="logout.php">Logout</a></li>
+</ul>
+<div>
+
+<h1 align="center">RESTAURANT MANAGEMENT SYSTEM</h1>
+<h2 align="center">Customers Feedback </h2>
+<div id="form" style="padding-left:100px">
+  <table width='80%' border=2 align="center">
+        <tr bgcolor='#CCCCCC'>
+		<td width="13%">User ID</td>
+            <td width="17%">Customer Name</td>
+            <td width="15%">Dates posted</td>
+            <td width="8%">Feedback</td>
+        </tr>
+        <?php 
+        //while($res = mysql_fetch_array($result)) { // mysql_fetch_array is deprecated, we need to use mysqli_fetch_array 
+        while($res = mysqli_fetch_array($resultorder)) { 
+		//UserID ,CustomerName, Dates ,Feedback        
+            echo "<tr>";
+			echo "<td>".$res['UserID']."</td>";
+            echo "<td>".$res['CustomerName']."</td>";
+            echo "<td>".$res['Dates']."</td>";
+            echo "<td>".$res['Feedback']."</td>";           
+        }
+        ?>
+  </table>
+ 
+  </div>
+</div>
+</body>
+</html>
